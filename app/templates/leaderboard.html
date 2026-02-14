@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Leaderboard (Admin Only)</h2>
+  <table>
+    <tr><th>Rank</th><th>Name</th><th>Total Score</th><th>Solved</th><th>Time Delta(s)</th><th>Violations</th></tr>
+    {% for row in rows %}
+    <tr>
+      <td>{{ loop.index }}</td><td>{{ row.student.name }}</td><td>{{ row.total_score }}</td><td>{{ row.solved }}</td><td>{{ row.delta }}</td><td>{{ row.violations }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

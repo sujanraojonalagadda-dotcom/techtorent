@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Contest Status: {{ contest.status|upper }}</h2>
+  <p>Start: {{ contest.started_at or 'Not Started' }}</p>
+  <p>End: {{ contest.ends_at or 'Not Scheduled' }}</p>
+  {% if contest.status == 'active' %}<p id="timer"></p>{% endif %}
+</div>
+<div class="card">
+  <h3>Problems</h3>
+  {% if problems %}
+    <ul>
+      {% for p in problems %}
+        <li>#{{ p.id }} {{ p.title }} ({{ p.time_limit }}s) <a href="{{ url_for('solve_problem', problem_id=p.id) }}">Solve</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Problems will be available only when contest is active.</p>
+  {% endif %}
+</div>
+<div class="card"><a href="{{ url_for('submission_history') }}">View Submission History</a></div>
+<script>
+  const endTs = {{ (contest.ends_at.timestamp() * 1000)|int if contest.ends_at else 0 }};
+  if (endTs) {
+    setInterval(() => {
+      const diff = endTs - Date.now();
+      const el = document.getElementById('timer');
+      if (!el) return;
+      if (diff <= 0) { el.textContent = 'Contest ended'; return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      el.textContent = `Time Left: ${h}h ${m}m ${s}s`;
+    }, 1000);
+  }
+</script>
+{% endblock %}

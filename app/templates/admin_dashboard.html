@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Admin Monitor</h2>
+  <p>Contest Status: <strong>{{ contest.status }}</strong></p>
+  <p>Total Participants: {{ total_participants }}</p>
+  <p>Total Submissions: {{ total_submissions }}</p>
+  <form method="post" action="{{ url_for('start_contest') }}"><button type="submit">Start Contest</button></form>
+  <form method="post" action="{{ url_for('stop_contest') }}"><button type="submit">Stop Contest</button></form>
+  <a href="{{ url_for('manage_problems') }}">Manage Problems</a> |
+  <a href="{{ url_for('leaderboard') }}">Leaderboard</a> |
+  <a href="{{ url_for('export_csv') }}">Export CSV</a>
+</div>
+<div class="card">
+  <h3>Violation Summary</h3>
+  <ul>
+    {% for key, val in violation_counts.items() %}<li>{{ key }}: {{ val }}</li>{% endfor %}
+  </ul>
+</div>
+<div class="card">
+  <h3>Recent Submissions</h3>
+  <table>
+    <tr><th>User</th><th>Problem</th><th>Verdict</th><th>Score</th><th>When</th></tr>
+    {% for s in recent_submissions %}
+    <tr><td>{{ s.user.name }}</td><td>{{ s.problem_id }}</td><td>{{ s.verdict }}</td><td>{{ s.score }}</td><td>{{ s.submitted_at }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+<script>setTimeout(()=>location.reload(),5000);</script>
+{% endblock %}

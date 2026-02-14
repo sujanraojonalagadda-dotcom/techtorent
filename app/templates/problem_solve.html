@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid">
+  <div class="card">
+    <h2>#{{ problem.id }} {{ problem.title }}</h2>
+    <pre>{{ problem.statement }}</pre>
+    <p><strong>Sample Input</strong></p><pre>{{ problem.sample_input }}</pre>
+    <p><strong>Sample Output</strong></p><pre>{{ problem.sample_output }}</pre>
+    <p><strong>Time Limit:</strong> {{ problem.time_limit }} sec</p>
+  </div>
+  <div class="card">
+    <label>Language</label>
+    <select id="language"><option value="python">Python</option><option value="c">C</option></select>
+    <div id="editor" style="height:300px;"></div>
+    <textarea id="custom_input" placeholder="Custom Input"></textarea>
+    <div class="row">
+      <button onclick="runCode()">Run</button>
+      <button onclick="submitCode()">Submit</button>
+    </div>
+    <pre id="result"></pre>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/anti_cheat.js') }}"></script>
+<script>
+const editor = ace.edit('editor');
+editor.setTheme('ace/theme/monokai');
+editor.session.setMode('ace/mode/python');
+document.getElementById('language').addEventListener('change', (e) => {
+  editor.session.setMode(e.target.value === 'c' ? 'ace/mode/c_cpp' : 'ace/mode/python');
+});
+async function sendTo(url) {
+  const form = new URLSearchParams();
+  form.set('language', document.getElementById('language').value);
+  form.set('code', editor.getValue());
+  form.set('custom_input', document.getElementById('custom_input').value);
+  const res = await fetch(url, {method:'POST', body: form, headers: {'Content-Type':'application/x-www-form-urlencoded'}});
+  return res.json();
+}
+async function runCode() {
+  const data = await sendTo('{{ url_for('run_problem', problem_id=problem.id) }}');
+  document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+}
+async function submitCode() {
+  const data = await sendTo('{{ url_for('submit_problem', problem_id=problem.id) }}');
+  document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+}
+</script>
+{% endblock %}

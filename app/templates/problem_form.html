@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>{{ 'Edit' if problem else 'Add' }} Problem</h2>
+  <form method="post">
+    <input name="title" placeholder="Title" value="{{ problem.title if problem else '' }}" required>
+    <textarea name="statement" placeholder="Statement" required>{{ problem.statement if problem else '' }}</textarea>
+    <textarea name="sample_input" placeholder="Sample Input">{{ problem.sample_input if problem else '' }}</textarea>
+    <textarea name="sample_output" placeholder="Sample Output">{{ problem.sample_output if problem else '' }}</textarea>
+    <input name="time_limit" type="number" min="1" value="{{ problem.time_limit if problem else 2 }}" required>
+    <textarea name="tests" placeholder="Each line: input|||expected_output">{{ tests if tests else '' }}</textarea>
+    <button type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}
