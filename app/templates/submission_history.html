@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Your Submission History</h2>
+  <table>
+    <tr><th>Problem ID</th><th>Verdict</th><th>Score</th><th>Time</th><th>Submitted</th></tr>
+    {% for s in submissions %}
+      <tr><td>{{ s.problem_id }}</td><td>{{ s.verdict }}</td><td>{{ s.score }}</td><td>{{ s.execution_time }}</td><td>{{ s.submitted_at }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
